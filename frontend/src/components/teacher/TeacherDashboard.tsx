@@ -32,7 +32,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 const API_BASE_URL = 'http://localhost:4001/api';
 
 // Temporary teacher ID - will be replaced with auth context in production
-const teacherId = '681b68f905ae289b9baf53e9';
+let teacherId;
 
 interface Notification {
   _id: string;
@@ -182,6 +182,7 @@ export default function TeacherDashboard() {
 
   // Load absences when component mounts or date range changes
   useEffect(() => {
+    teacherId = JSON.parse(localStorage.getItem('user') || '{}')._id;
     fetchAbsencesByDateRange();
   }, [startDate, endDate]);
 
@@ -192,6 +193,8 @@ export default function TeacherDashboard() {
 
   // Handle logout
   const handleLogout = () => {
+    localStorage.removeItem('user');
+    window.location.reload(); 
     console.log('Logging out...');
   };
 
@@ -294,7 +297,7 @@ export default function TeacherDashboard() {
                 <span className='text-gray-900 dark:text-gray-100'>Settings</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={toggleTheme}>
+              {/* <DropdownMenuItem onClick={toggleTheme}>
                 {theme === 'dark' ? (
                   <>
                     <SunIcon className="mr-2 h-4 w-4 text-gray-900 dark:text-gray-100 " />
@@ -306,7 +309,7 @@ export default function TeacherDashboard() {
                     <span className='text-gray-900 dark:text-gray-100'>Dark Mode</span>
                   </>
                 )}
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4 text-gray-900 dark:text-gray-100 " />

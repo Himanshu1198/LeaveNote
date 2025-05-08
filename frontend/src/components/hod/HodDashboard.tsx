@@ -32,7 +32,7 @@ import { Textarea } from '../ui/textarea';
 const API_BASE_URL = 'http://localhost:4001/api';
 
 // For now we'll use a hardcoded userId, but in a real app this would come from auth context/redux
-const hodUserId = '681b689505ae289b9baf53e0'; // Replace with a HOD user ID
+let hodUserId; // Replace with a HOD user ID
 
 interface AttendanceRequest {
   _id: string;
@@ -105,6 +105,9 @@ export default function HodDashboard() {
   
   // Fetch all attendance requests - HOD should see all requests
   useEffect(() => {
+
+    hodUserId = JSON.parse(localStorage.getItem('user') || '{}')._id;
+
     const fetchRequests = async () => {
       try {
         setLoading(true);
@@ -158,6 +161,8 @@ export default function HodDashboard() {
 
     fetchRequests();
     fetchStats();
+
+
   }, []);
 
   // Filter requests when search term or status filter changes
@@ -187,6 +192,8 @@ export default function HodDashboard() {
   // Handle logout
   const handleLogout = () => {
     // In a real app, this would dispatch logout action
+    localStorage.removeItem('user');
+    window.location.reload(); 
     console.log('Logging out...');
   };
 
@@ -337,7 +344,7 @@ export default function HodDashboard() {
                  <Settings className="mr-2 h-4 w-4 text-gray-900 dark:text-gray-100 " />
                 <span className='text-gray-900 dark:text-gray-100'>Settings</span>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={toggleTheme}>
+              {/* <DropdownMenuItem onClick={toggleTheme}>
                 {theme === 'dark' ? (
                   <>
                     <SunIcon className="mr-2 h-4 w-4 text-gray-900 dark:text-gray-100 " />
@@ -349,7 +356,7 @@ export default function HodDashboard() {
                     <span className='text-gray-900 dark:text-gray-100'>Switch to Dark Mode</span>
                   </>
                 )}
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4 text-gray-900 dark:text-gray-100" />
@@ -692,7 +699,7 @@ export default function HodDashboard() {
                   <div>
                     <h4 className="font-medium text-sm mb-1">Supporting Document</h4>
                     <a 
-                      href={selectedRequest.proof}
+                      href={`${API_BASE_URL.replace('/api', '')}${selectedRequest.proof}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center text-blue-500 hover:underline"

@@ -32,7 +32,7 @@ import axios from 'axios';
 const API_BASE_URL = 'http://localhost:4001/api';
 
 // For now we'll use a hardcoded userId, but in a real app this would come from auth context/redux
-const userId = '681b689505ae289b9baf53e0';
+let userId;
 
 interface AttendanceRequest {
   _id: string;
@@ -184,6 +184,9 @@ export default function StudentDashboard() {
 
   // Fetch attendance requests
   useEffect(() => {
+    userId = JSON.parse(localStorage.getItem('user') || '{}')._id;
+    console.log(userId);
+    
     const fetchRequests = async () => {
       try {
         setLoading(true);
@@ -252,6 +255,8 @@ export default function StudentDashboard() {
   // Handle logout
   const handleLogout = () => {
     // In a real app, this would dispatch logout action
+    localStorage.removeItem('user');
+    window.location.reload(); 
     console.log('Logging out...');
   };
 
@@ -265,8 +270,15 @@ export default function StudentDashboard() {
   const fetchAvailableSubjects = async () => {
     try {
       const res = await axios.get(`${API_BASE_URL}/subjects`);
-      setAvailableSubjects(res.data || []);
-      console.log("Available subjects:", res.data);
+      // Get student's class from localStorage
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const studentClass = user.className;
+      
+      // Filter subjects to only show those matching the student's class
+      const filteredSubjects = res.data.filter(subject => subject.class_name === studentClass);
+      
+      setAvailableSubjects(filteredSubjects || []);
+      console.log("Available subjects for class", studentClass, ":", filteredSubjects);
       
     } catch (error) {
       console.error('Error fetching subjects:', error);
@@ -746,7 +758,7 @@ export default function StudentDashboard() {
                  <Settings className="mr-2 h-4 w-4 text-gray-900 dark:text-gray-100 " />
                 <span className='text-gray-900 dark:text-gray-100'>Settings</span>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={toggleTheme}>
+              {/* <DropdownMenuItem onClick={toggleTheme}>
                 {theme === 'dark' ? (
                   <>
                     <SunIcon className="mr-2 h-4 w-4 text-gray-900 dark:text-gray-100 " />
@@ -758,7 +770,7 @@ export default function StudentDashboard() {
                     <span className='text-gray-900 dark:text-gray-100'>Switch to Dark Mode</span>
                   </>
                 )}
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4 text-gray-900 dark:text-gray-100" />

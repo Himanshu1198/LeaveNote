@@ -6,7 +6,7 @@ import {
   Settings, 
   LogOut, 
   Palette, 
-  Menu, 
+  Menu,
   X, 
   ChevronUp
 } from 'lucide-react';
@@ -95,19 +95,22 @@ export default function AdminDashboard() {
       id: 'timetable', 
       active: activeContent === 'timetable'
     },
-    { 
-      icon: <ClipboardCheck size={20} />, 
-      label: 'Attendance Request Management', 
-      id: 'attendance', 
-      active: activeContent === 'attendance'
-    },
+    // { 
+    //   icon: <ClipboardCheck size={20} />, 
+    //   label: 'Attendance Request Management', 
+    //   id: 'attendance', 
+    //   active: activeContent === 'attendance'
+    // },
   ];
 
   // User menu items
   const userMenuItems = [
-    { icon: <Settings size={18} />, label: 'Settings', onClick: () => console.log('Settings clicked') },
-    { icon: <Palette size={18} />, label: 'Theme Preferences', onClick: toggleTheme },
-    { icon: <LogOut size={18} />, label: 'Logout', onClick: () => console.log('Logout clicked') }
+    // { icon: <Settings size={18} />, label: 'Settings', onClick: () => console.log('Settings clicked') },
+    // { icon: <Palette size={18} />, label: 'Theme Preferences', onClick: toggleTheme },
+    { icon: <LogOut size={18} />, label: 'Logout', onClick: () => {
+      localStorage.removeItem('user');
+      window.location.reload(); 
+      console.log('Logout clicked')} }
   ];
 
   // Render active component based on state
@@ -214,7 +217,7 @@ export default function AdminDashboard() {
               JP
             </div>
             <div className="flex-1 text-left">
-              <h3 className="font-medium">John Doe</h3>
+              <h3 className="font-medium">Admin</h3>
               <p className="text-sm text-gray-500 dark:text-gray-400">Admin</p>
             </div>
           </button>

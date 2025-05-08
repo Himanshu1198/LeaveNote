@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
 // Get all users
 exports.getUsers = async (req, res) => {
@@ -306,19 +307,11 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Create JWT token
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '30d' }
-    );
-
     // Return user without password
     const userResponse = user.toObject();
     delete userResponse.password;
 
     res.status(200).json({
-      token,
       user: userResponse
     });
   } catch (error) {

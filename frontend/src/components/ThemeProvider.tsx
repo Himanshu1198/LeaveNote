@@ -21,7 +21,7 @@ export const useTheme = () => {
 
 // Theme Provider Component
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('light');
+  const [theme, setThemeState] = useState<Theme>('dark');
 
   // Initialize theme from localStorage or system preference
   useEffect(() => {
