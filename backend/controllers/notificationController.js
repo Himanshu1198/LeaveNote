@@ -65,41 +65,41 @@ exports.createNotificationsForRequest = async (requestId) => {
 };
 
 // Get notifications for a teacher
-// exports.getTeacherNotifications = async (req, res) => {
-//   try {
-//     const teacherId = req.params.teacherId;
-//     const { startDate, endDate } = req.query;
+exports.getTeacherNotifications = async (req, res) => {
+  try {
+    const teacherId = req.params.teacherId;
+    const { startDate, endDate } = req.query;
     
-//     if (!mongoose.Types.ObjectId.isValid(teacherId)) {
-//       return res.status(400).json({ message: 'Invalid teacher ID format' });
-//     }
+    if (!mongoose.Types.ObjectId.isValid(teacherId)) {
+      return res.status(400).json({ message: 'Invalid teacher ID format' });
+    }
     
-//     let query = { teacher_id: teacherId };
+    let query = { teacher_id: teacherId };
     
-//     // Add date range filter if provided
-//     if (startDate && endDate) {
-//       const start = new Date(startDate);
-//       const end = new Date(endDate);
-//       end.setHours(23, 59, 59, 999); // Include the entire end day
+    // Add date range filter if provided
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999); // Include the entire end day
       
-//       query.date = {
-//         $gte: start,
-//         $lte: end
-//       };
-//     }
+      query.date = {
+        $gte: start,
+        $lte: end
+      };
+    }
     
-//     const notifications = await Notification.find(query)
-//       .populate('attendance_request_id')
-//       .populate('subject_id')
-//       .populate('student_ids', 'name sap email className')
-//       .sort({ date: 1, createdAt: -1 });
+    const notifications = await Notification.find(query)
+      .populate('attendance_request_id')
+      .populate('subject_id')
+      .populate('student_ids', 'name sap email className')
+      .sort({ date: 1, createdAt: -1 });
     
-//     res.status(200).json(notifications);
-//   } catch (error) {
-//     console.error('Error fetching teacher notifications:', error);
-//     res.status(500).json({ message: 'Server error', error: error.message });
-//   }
-// };
+    res.status(200).json(notifications);
+  } catch (error) {
+    console.error('Error fetching teacher notifications:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // Mark a notification as read
 exports.markAsRead = async (req, res) => {

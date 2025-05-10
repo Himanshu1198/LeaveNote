@@ -6,6 +6,32 @@ import axios from 'axios';
 const API_URL = 'http://localhost:4001/api';
 
 export default function TimetableManagement() {
+
+  const generateSampleCSV = () => {
+    // Create sample data with headers and example rows
+    const csvContent = `name,start_time,end_time,teacher_name,class_name,day
+Mathematics,08:00,09:30,Dr. Smith,I1,Monday
+Physics,10:00,11:30,Prof. Johnson,I1,Monday
+Chemistry,13:00,14:30,Ms. Williams,I1,Tuesday
+Computer Science,09:00,10:30,Mr. Brown,I2,Wednesday
+Biology,11:00,12:30,Dr. Davis,I3,Thursday
+Weekend Lab,14:00,15:30,Dr. Wilson,I1,Saturday`;
+
+    // Create a Blob with the CSV content
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    
+    // Create a temporary link element and trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sample_subjects.csv';
+    document.body.appendChild(a);
+    a.click();
+    
+    // Clean up
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
   // Access theme context
   const { theme, toggleTheme } = useTheme();
 
@@ -437,6 +463,15 @@ export default function TimetableManagement() {
               <p className="mb-2 text-sm text-gray-500">
                 Drag and drop your CSV file here, or click to browse
               </p>
+              <div className="mb-4">
+                <button
+                  type="button"
+                  onClick={generateSampleCSV}
+                  className="text-blue-600 hover:text-blue-700 text-sm underline"
+                >
+                  Download Sample CSV
+                </button>
+              </div>
               <button
                 type="button"
                 className="px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg"
@@ -490,9 +525,103 @@ export default function TimetableManagement() {
     </div>
   )}
 
+  // Add this function to your TimetableManagement component
+  
+
   return (
     <div className={`flex flex-col w-full max-w-6xl mx-auto p-2 sm:p-4 ${getBgClass()} rounded-lg shadow transition-colors duration-300`}>
       {/* Header with class selection */}
+      {isImportModalOpen && (
+    <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className={`${getCardBgClass()} rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-md`}>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className={`text-lg sm:text-xl font-bold ${getTextClass()}`}>Import Timetable</h2>
+          <button 
+            onClick={() => setIsImportModalOpen(false)}
+            className={`${getSubTextClass()} hover:text-gray-700 dark:hover:text-gray-300 text-xl`}
+          >
+            ×
+          </button>
+        </div>
+        
+        <div className="space-y-4">
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+            <label className="cursor-pointer block">
+              <input 
+                type="file"
+                accept=".csv"
+                className="hidden"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    setImportFile(e.target.files[0]);
+                  }
+                }}
+              />
+              <Upload size={36} className="mx-auto mb-2 text-gray-400" />
+              <p className="mb-2 text-sm text-gray-500">
+                Drag and drop your CSV file here, or click to browse
+              </p>
+              <div className="mb-4">
+                <button
+                  type="button"
+                  onClick={generateSampleCSV}
+                  className="text-blue-600 hover:text-blue-700 text-sm underline"
+                >
+                  Download Sample CSV
+                </button>
+              </div>
+              <button
+                type="button"
+                className="px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg"
+              >
+                Browse Files
+              </button>
+            </label>
+          </div>
+          
+          {importFile && (
+            <div className="flex items-center justify-center">
+              <Check size={20} className="text-green-500 mr-2" />
+              <span>{importFile.name}</span>
+            </div>
+          )}
+          
+          {error && (
+            <p className="text-red-500 text-sm">{error}</p>
+          )}
+          
+          <div className="flex justify-end space-x-2 pt-4">
+            <button
+              onClick={() => setIsImportModalOpen(false)}
+              className={`px-4 py-2 border ${getBorderClass()} rounded-md ${getTextClass()} hover:bg-gray-100 dark:hover:bg-gray-700`}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleImportCSV}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center"
+              disabled={!importFile || isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <Upload size={18} className="mr-1" />
+                  Import
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 space-y-3 sm:space-y-0">
         <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
           <h1 className={`text-xl sm:text-2xl font-bold ${getTextClass()}`}>Timetable Management</h1>
@@ -546,14 +675,14 @@ export default function TimetableManagement() {
             <span className="hidden sm:inline">Export CSV</span>
             <span className="sm:hidden">Export</span>
           </button>
-          {/* <button 
+          <button 
             onClick={() => setIsImportModalOpen(true)} 
             className="flex items-center px-3 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition"
           >
             <Upload size={18} className="mr-1" />
             <span className="hidden sm:inline">Import CSV</span>
             <span className="sm:hidden">Import</span>
-          </button> */}
+          </button>
         </div>
       </div>
       
