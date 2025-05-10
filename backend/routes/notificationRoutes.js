@@ -3,7 +3,7 @@ const router = express.Router();
 const notificationController = require('../controllers/notificationController');
 
 // Get all notifications for a teacher
-router.get('/teacher/:teacherId', notificationController.getTeacherNotifications);
+// router.get('/teacher/:teacherId', notificationController.getTeacherNotifications);
 
 // Mark a notification as read
 router.put('/:id/read', notificationController.markAsRead);

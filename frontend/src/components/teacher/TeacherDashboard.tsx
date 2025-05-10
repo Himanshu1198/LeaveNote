@@ -99,6 +99,7 @@ export default function TeacherDashboard() {
 
   const { theme, toggleTheme, setTheme } = useTheme();
   
+
   // Fetch teacher's notifications for the selected date range
   const fetchAbsencesByDateRange = async () => {
     try {
@@ -408,7 +409,7 @@ export default function TeacherDashboard() {
                     <CardContent className="p-0">
                       <Table>
                         <TableHeader>
-                          <TableRow className="bg-gray-50 dark:bg-gray-750">
+                          <TableRow className="bg-gray-50 dark:bg-gray-900">
                             <TableHead>SAP ID</TableHead>
                             <TableHead>Name</TableHead>
                             <TableHead>Class</TableHead>

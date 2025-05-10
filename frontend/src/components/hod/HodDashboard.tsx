@@ -473,7 +473,7 @@ export default function HodDashboard() {
                   <div className="text-sm">
                     <div className="font-medium mb-1 text-gray-800 dark:text-gray-200">Student:</div>
                     <div className="text-gray-600 dark:text-gray-400">
-                      {request.student_id.name} ({request.student_id.sap})
+                      {request.student_id.name || 'N/A'} ({request.student_id.sap || 'N/A'})
                       {request.student_ids && request.student_ids.length > 0 && (
                         <div className="text-xs mt-1 text-gray-500 dark:text-gray-500">
                           + {request.student_ids.length} other student{request.student_ids.length !== 1 ? 's' : ''}
@@ -658,7 +658,7 @@ export default function HodDashboard() {
             <>
               <DialogHeader>
                 <div className="flex justify-between items-center">
-                  <DialogTitle>{selectedRequest.name}</DialogTitle>
+                  <DialogTitle>{selectedRequest.name || 'N/A'}</DialogTitle>
                   <Badge 
                     variant={
                       selectedRequest.status === 'approved' ? 'default' : 
@@ -677,7 +677,7 @@ export default function HodDashboard() {
                 <div>
                   <h4 className="font-medium text-sm mb-1 text-gray-800 dark:text-gray-200">Student</h4>
                   <div className="p-3 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-md">
-                    <div className="font-medium text-gray-900 dark:text-gray-50">{selectedRequest.student_id.name}</div>
+                    <div className="font-medium text-gray-900 dark:text-gray-50">{selectedRequest.student_id.name || 'N/A'}</div>
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       SAP: {selectedRequest.student_id.sap}
                     </div>
@@ -718,7 +718,7 @@ export default function HodDashboard() {
                         key={subject._id}
                         className="p-3 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-md"
                       >
-                        <div className="font-medium text-gray-900 dark:text-gray-50">{subject.name}</div>
+                        <div className="font-medium text-gray-900 dark:text-gray-50">{subject.name || 'N/A'}</div>
                         <div className="text-sm text-gray-500 dark:text-gray-400">
                           {subject.day}, {subject.start_time}-{subject.end_time}, Class: {subject.class_name}
                         </div>
@@ -739,9 +739,9 @@ export default function HodDashboard() {
                           key={student._id}
                           className="p-3 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-md"
                         >
-                          <div className="font-medium text-gray-900 dark:text-gray-50">{student.name}</div>
+                          <div className="font-medium text-gray-900 dark:text-gray-50">{student.name || 'N/A'}</div>
                           <div className="text-sm text-gray-500 dark:text-gray-400">
-                            SAP: {student.sap}, Class: {student.className || 'N/A'}
+                            SAP: {student.sap || 'N/A'}, Class: {student.className || 'N/A'}
                           </div>
                         </div>
                       ))}

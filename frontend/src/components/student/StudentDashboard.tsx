@@ -834,7 +834,7 @@ export default function StudentDashboard() {
           </div>
           
           <div className="flex gap-4 w-full md:w-auto">
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
+            {/* <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-40 bg-white dark:bg-gray-800 border dark:border-gray-700">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
@@ -844,7 +844,7 @@ export default function StudentDashboard() {
                 <SelectItem value="approved" className='text-gray-900 dark:text-gray-100'>Approved</SelectItem>
                 <SelectItem value="rejected" className='text-gray-900 dark:text-gray-100'>Rejected</SelectItem>
               </SelectContent>
-            </Select>
+            </Select> */}
             
             <Button 
               className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-800"
@@ -1061,7 +1061,7 @@ export default function StudentDashboard() {
                   <div>
                     <h4 className="font-medium text-sm mb-1">Supporting Document</h4>
                     <a 
-                      href={selectedRequest.proof}
+                      href={selectedRequest.proof.startsWith('http') ? selectedRequest.proof : `${API_BASE_URL.replace('/api', '')}${selectedRequest.proof}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-500 hover:underline"
@@ -1626,7 +1626,7 @@ export default function StudentDashboard() {
                             Document already uploaded. Click to replace.
                           </p>
                           <a 
-                            href={editingRequest.proof}
+                            href={editingRequest.proof.startsWith('http') ? editingRequest.proof : `${API_BASE_URL.replace('/api', '')}${editingRequest.proof}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="mt-1 text-blue-500 hover:underline text-sm"
